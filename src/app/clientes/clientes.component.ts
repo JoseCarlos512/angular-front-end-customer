@@ -25,39 +25,50 @@ export class ClientesComponent implements OnInit {
 
   }
 
-  /*
-  delete(cliente: Cliente): void {
-    Swal({
-      title: 'Está seguro?',
-      text: `¿Seguro que desea eliminar al cliente ${cliente.nombre} ${cliente.apellido}?`,
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Si, eliminar!',
-      cancelButtonText: 'No, cancelar!',
-      confirmButtonClass: 'btn btn-success',
-      cancelButtonClass: 'btn btn-danger',
-      buttonsStyling: false,
-      reverseButtons: true
-    }).then((result:any) => {
-      if (result.value) {
+  public delete(id: number): void{
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger'
+      },
+      buttonsStyling: false
+    })
+    
+      swalWithBootstrapButtons.fire({
+        title: '¿Estas seguro?',
+        text: "¿Seguro que deseas eliminar el cliente?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si, eliminar',
+        cancelButtonText: 'No, cancelar',
+        reverseButtons: true
+      }).then((result) => {
+        if (result.isConfirmed) {
 
-        this.clienteService.delete(cliente.id).subscribe(
-          response => {
-            this.clientes = this.clientes.filter(cli => cli !== cliente)
-            Swal(
-              'Cliente Eliminado!',
-              `Cliente ${cliente.nombre} eliminado con éxito.`,
+        this.clientes = this.clientes.filter(customer => customer.id !== id);
+        this.clienteService.delete(id)
+          .subscribe(response => {        
+            swalWithBootstrapButtons.fire(
+              'Cliente eliminado!',
+              'Cliente eliminado con exito.',
               'success'
             )
-          }
+        });  
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire(
+          'Cancelado',
+          'Transaccion cancelada',
+          'error'
         )
-
       }
     })
+
+    
+
   }
-  */
 
   ngOnInit(): void {
     this.clienteService.getClientes().subscribe(
