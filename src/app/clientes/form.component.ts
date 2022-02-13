@@ -14,6 +14,7 @@ export class FormComponent implements OnInit {
 
   public cliente: Cliente = new Cliente();
   public titulo: string = "Crear cliente";
+  public errores: string[] = []; 
 
   /**
    *  Inyectar la clase service
@@ -22,7 +23,8 @@ export class FormComponent implements OnInit {
     private clienteService: ClienteService,
     private router: Router,
     private activatedRoute:ActivatedRoute
-  ) { }
+  ) { 
+  }
 
   ngOnInit(): void {
     /**
@@ -41,6 +43,9 @@ export class FormComponent implements OnInit {
           `Cliente ${cliente.nombre} se creado con exito`,
           'success'
         )
+      }, 
+      err => {
+        this.errores = err.error.errors as string[];
       });
 
   }
@@ -57,8 +62,8 @@ export class FormComponent implements OnInit {
   }
 
   public actualizar(): void {
-    this.clienteService.update(this.cliente).subscribe(
-      cliente => {
+    this.clienteService.update(this.cliente)
+    .subscribe(cliente => {
         this.router.navigate(['/clientes'])
           
         Swal.fire(
@@ -66,7 +71,11 @@ export class FormComponent implements OnInit {
           `Cliente ${cliente.nombre} se actualizo con exito`,
           'success'
         )
-      }
-    )
+      },
+      err => {
+        console.log("==================");
+        console.log(err.error.errors)
+        this.errores = err.error.errors as string[];
+      });
   }
 }
