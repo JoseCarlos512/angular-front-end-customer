@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Cliente } from './cliente';
 import { ClienteService } from './cliente.service';
 import Swal from 'sweetalert2';
+import { tap } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-clientes',
@@ -11,6 +13,7 @@ import Swal from 'sweetalert2';
 export class ClientesComponent implements OnInit {
 
   clientes: Cliente[] = [];
+  paginador: any;
 
   /**
    * Abreviatura: private clienteService: ClienteService
@@ -21,7 +24,10 @@ export class ClientesComponent implements OnInit {
    *  }
    * 
    */
-  constructor(private clienteService: ClienteService) {
+  constructor(
+    private clienteService: ClienteService,
+    private activatedRoute: ActivatedRoute
+  ) {
 
   }
 
@@ -71,9 +77,35 @@ export class ClientesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.clienteService.getClientes().subscribe(
-      clientes => this.clientes = clientes
-    );
+
+    this.activatedRoute.paramMap.subscribe( params => {
+      let page:number = Number(params.get('page'));
+
+      page = !page ? 0 : page;
+       
+      this.clienteService.getClientes(page).subscribe(
+        response => {
+          this.clientes = (response.content as Cliente[])
+          this.paginador = response;
+        }
+      );
+    })
+    
+    
   }
+
+  
+
+  /*ngOnInit() {
+    let page = 0;
+    this.clienteService.getClientes(page)
+    .pipe(
+      tap( response => {
+        (response.content as Cliente[]).forEach(cliente => {
+          console.log(cliente.nombre);
+        });
+      })
+    ).subscribe(response => this.clientes = response.content as Cliente[]);
+  }*/
 
 }

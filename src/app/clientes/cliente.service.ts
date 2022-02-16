@@ -20,10 +20,28 @@ export class ClienteService {
     private router: Router
   ) { }
 
-  getClientes() : Observable<Cliente[]> {
+  getClientes(page:number) : Observable<any> {
      //return of(CLIENTES);
-     return this.http.get<Cliente[]>(this.urlEndPointGet).pipe(
-      map(response => response as Cliente[])
+     return this.http.get(this.urlEndPointGet + '/page/' + page).pipe(
+      map((response:any) => {
+        (response.content as Cliente[]).map(cliente => {
+          
+          /**
+           *  Manipular la informacion y convertir en mayuscula 
+           *  el nombre y el apellido
+           */
+          cliente.nombre = cliente.nombre.toUpperCase();
+          cliente.apellido = cliente.apellido.toUpperCase();
+          return cliente;
+        })
+        /**
+         *  Siempre retornar la informacion del mapa 
+         *  de lo contrario estaras en una encruzijada
+         *  de que el mapeo se esta realizando bien
+         *  pero la informacion devuelta no se muestra!
+         */
+        return response;
+      })
     );
   }
 

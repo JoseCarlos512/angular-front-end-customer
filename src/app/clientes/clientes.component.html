@@ -39,6 +39,9 @@
             </tr>
           </tbody>
       </table>
+      
+      <paginator-nav *ngIf="paginador" [paginador]="paginador"></paginator-nav>
+
       <ng-template #elseBlockMessage>
         <div class="alert alert-info">
           No hay registros en la base de datos
