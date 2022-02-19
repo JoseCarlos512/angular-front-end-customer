@@ -11,7 +11,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { FormComponent } from './clientes/form.component';
-import { PaginatorComponent } from './paginator/paginator.component'
+import { PaginatorComponent } from './paginator/paginator.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { MatDatepickerModule } from '@angular/material/datepicker';
+//import { MatNativeDateModule } from '@angular/material/core';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
 const routes: Routes = [
   {
@@ -55,7 +59,11 @@ const routes: Routes = [
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    BrowserAnimationsModule,
+    MatDatepickerModule,
+    //MatNativeDateModule,
+    MatMomentDateModule
   ],
   providers: [ClienteService],
   bootstrap: [AppComponent]
