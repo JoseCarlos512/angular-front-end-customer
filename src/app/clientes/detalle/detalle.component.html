@@ -19,7 +19,7 @@
                   <label class="custom-file-label" for="inputGroupFile04">Seleccionar archivo</label>
                 </div>
                 <div class="input-group-append">
-                  <button (click)="subirFoto()" class="btn btn-outline-secondary" type="button">Subir</button>
+                  <button (click)="subirFoto()" [disabled]="!fotoSeleccionada" class="btn btn-outline-secondary" type="button">Subir</button>
                 </div>
               </div>
 
@@ -28,9 +28,11 @@
                 <img *ngIf="cliente?.foto" src="http://localhost:8080/api/uploads/img/{{ cliente.foto }}" alt="{{cliente.foto}}" class="img-thumbnail rounded">
             </div>
             
-            <div class="col-sm-12">
-              <div class="progress">
-                <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+            <div *ngIf="progreso > 0" class="col-sm-12">
+              <div class="progress" style="height: 40px;">
+                <div class="progress-bar" role="progressbar" [ngStyle]="{ width:progreso+'%' }" attr.aria-valuenow="{{ progreso }}" aria-valuemin="0" aria-valuemax="100">
+                  {{ progreso }}%
+                </div>
               </div>
             </div>
         </div>

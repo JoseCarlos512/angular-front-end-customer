@@ -12,8 +12,9 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ClientesComponent implements OnInit {
 
-  clientes: Cliente[] = [];
-  paginador: any;
+  public clientes: Cliente[] = [];
+  public paginador: any;
+  public clienteSeleccionado!: Cliente;
 
   /**
    * Abreviatura: private clienteService: ClienteService
@@ -71,9 +72,6 @@ export class ClientesComponent implements OnInit {
         )
       }
     })
-
-    
-
   }
 
   ngOnInit(): void {
@@ -90,8 +88,10 @@ export class ClientesComponent implements OnInit {
         }
       );
     })
-    
-    
+  }
+
+  abrirModal(cliente: Cliente) {
+      this.clienteSeleccionado = cliente;
   }
 
   

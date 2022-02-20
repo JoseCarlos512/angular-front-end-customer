@@ -43,10 +43,6 @@ const routes: Routes = [
   {
     path: 'cliente/form/:id',
     component: FormComponent
-  },
-  {
-    path: 'cliente/ver/:id',
-    component: DetalleComponent
   }
 ];
 
