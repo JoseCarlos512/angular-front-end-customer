@@ -90,6 +90,16 @@ export class ClientesComponent implements OnInit {
         }
       );
     })
+
+    this.modalService.getNotificarUpload().subscribe(cliente => {
+      this.clientes = this.clientes.map(clienteOriginal => {
+        if(clienteOriginal.id == cliente.id) {
+          clienteOriginal.foto = cliente.foto;
+        }
+
+        return clienteOriginal;
+      })
+    })
   }
 
   /*ngOnInit() {

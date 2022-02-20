@@ -65,6 +65,7 @@ export class DetalleComponent implements OnInit {
           } else if (event.type === HttpEventType.Response) {
             let response:any = event.body;
             this.cliente = response.cliente as Cliente;
+            this.modalService.getNotificarUpload().emit(this.cliente);
             Swal.fire("Subida correctamente", response.mensaje, "success");
           }
         }
