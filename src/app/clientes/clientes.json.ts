@@ -5,5 +5,6 @@ export const CLIENTES: Cliente[] = [{
     nombre: 'Jose Carlos',
     apellido: 'Leon Tito',
     email: 'jose.leon@deister.es',
-    createAt: '2018-08-12'
+    createAt: '2018-08-12',
+    foto: 'sdadasdasd.png'
   }];
