@@ -16,6 +16,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { MatDatepickerModule } from '@angular/material/datepicker';
 //import { MatNativeDateModule } from '@angular/material/core';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { DetalleComponent } from './clientes/detalle/detalle.component';
 
 const routes: Routes = [
   {
@@ -42,6 +43,10 @@ const routes: Routes = [
   {
     path: 'cliente/form/:id',
     component: FormComponent
+  },
+  {
+    path: 'cliente/ver/:id',
+    component: DetalleComponent
   }
 ];
 
@@ -53,7 +58,8 @@ const routes: Routes = [
     DirectivaComponent,
     ClientesComponent,
     FormComponent,
-    PaginatorComponent
+    PaginatorComponent,
+    DetalleComponent
   ],
   imports: [
     BrowserModule,
