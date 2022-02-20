@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Cliente } from './cliente';
 import { ClienteService } from './cliente.service';
+import { ModalService } from './detalle/modal.service';
 import Swal from 'sweetalert2';
 import { tap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -27,7 +28,8 @@ export class ClientesComponent implements OnInit {
    */
   constructor(
     private clienteService: ClienteService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private modalService: ModalService
   ) {
 
   }
@@ -90,12 +92,6 @@ export class ClientesComponent implements OnInit {
     })
   }
 
-  abrirModal(cliente: Cliente) {
-      this.clienteSeleccionado = cliente;
-  }
-
-  
-
   /*ngOnInit() {
     let page = 0;
     this.clienteService.getClientes(page)
@@ -107,5 +103,10 @@ export class ClientesComponent implements OnInit {
       })
     ).subscribe(response => this.clientes = response.content as Cliente[]);
   }*/
+
+  abrirModal(cliente: Cliente) {
+    this.clienteSeleccionado = cliente;
+    this.modalService.abrirModal();
+  }
 
 }

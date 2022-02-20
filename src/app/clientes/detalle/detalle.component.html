@@ -1,43 +1,54 @@
-<div class="card bg-dark text-white">
-    <div class="card-header"> {{ titulo }} </div>
-    <div class="card-body">
-
-      <div class="container">
-        <div *ngIf="cliente" class="row">
-            <div class="col-sm-6 mb-3">
-
-              <ul *ngIf="cliente" class="list-group mb-3">
-                <li class="list-group-item">{{ cliente.nombre }}</li>
-                <li class="list-group-item">{{ cliente.apellido }}</li>
-                <li class="list-group-item">{{ cliente.email }}</li>
-                <li class="list-group-item">{{ cliente.createAt }}</li>
-              </ul>
-              
-              <div class="input-group">
-                <div class="custom-file">
-                  <input (change)="seleccionarFoto($event)" type="file" class="custom-file-input" id="inputGroupFile04">
-                  <label class="custom-file-label" for="inputGroupFile04">Seleccionar archivo</label>
+<div *ngIf="modalService.modal" class="abrir-modal animacion fadeIn">
+  <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ titulo }}</h5>
+          <button type="button" (click)="cerrarModal()" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <div *ngIf="cliente" class="row">
+                <div class="col-sm-6 mb-3">
+    
+                  <ul *ngIf="cliente" class="list-group mb-3">
+                    <li class="list-group-item">{{ cliente.nombre }}</li>
+                    <li class="list-group-item">{{ cliente.apellido }}</li>
+                    <li class="list-group-item">{{ cliente.email }}</li>
+                    <li class="list-group-item">{{ cliente.createAt }}</li>
+                  </ul>
+                  
+                  <div class="input-group">
+                    <div class="custom-file">
+                      <input (change)="seleccionarFoto($event)" type="file" class="custom-file-input" id="inputGroupFile04">
+                      <label class="custom-file-label" for="inputGroupFile04">Seleccionar archivo</label>
+                    </div>
+                    <div class="input-group-append">
+                      <button (click)="subirFoto()" [disabled]="!fotoSeleccionada" class="btn btn-outline-secondary" type="button">Subir</button>
+                    </div>
+                  </div>
+    
                 </div>
-                <div class="input-group-append">
-                  <button (click)="subirFoto()" [disabled]="!fotoSeleccionada" class="btn btn-outline-secondary" type="button">Subir</button>
+                <div class="col-sm-6 mb-3">
+                    <img *ngIf="cliente?.foto" src="http://localhost:8080/api/uploads/img/{{ cliente.foto }}" alt="{{cliente.foto}}" class="img-thumbnail rounded">
                 </div>
-              </div>
-
-            </div>
-            <div class="col-sm-6 mb-3">
-                <img *ngIf="cliente?.foto" src="http://localhost:8080/api/uploads/img/{{ cliente.foto }}" alt="{{cliente.foto}}" class="img-thumbnail rounded">
-            </div>
-            
-            <div *ngIf="progreso > 0" class="col-sm-12">
-              <div class="progress" style="height: 40px;">
-                <div class="progress-bar" role="progressbar" [ngStyle]="{ width:progreso+'%' }" attr.aria-valuenow="{{ progreso }}" aria-valuemin="0" aria-valuemax="100">
-                  {{ progreso }}%
+                
+                <div *ngIf="progreso > 0" class="col-sm-12">
+                  <div class="progress" style="height: 40px;">
+                    <div class="progress-bar" role="progressbar" [ngStyle]="{ width:progreso+'%' }" attr.aria-valuenow="{{ progreso }}" aria-valuemin="0" aria-valuemax="100">
+                      {{ progreso }}%
+                    </div>
+                  </div>
                 </div>
-              </div>
             </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" (click)="cerrarModal()" class="btn btn-secondary" data-dismiss="modal">Close</button>
         </div>
       </div>
-
-        
     </div>
+  </div>
 </div>
