@@ -96,7 +96,6 @@ export class ClientesComponent implements OnInit {
         if(clienteOriginal.id == cliente.id) {
           clienteOriginal.foto = cliente.foto;
         }
-
         return clienteOriginal;
       })
     })
