@@ -17,6 +17,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 //import { MatNativeDateModule } from '@angular/material/core';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { DetalleComponent } from './clientes/detalle/detalle.component';
+import { LoginComponent } from './usuarios/login.component';
 
 const routes: Routes = [
   {
@@ -43,6 +44,10 @@ const routes: Routes = [
   {
     path: 'cliente/form/:id',
     component: FormComponent
+  },
+  {
+    path: 'login',
+    component: LoginComponent
   }
 ];
 
@@ -55,7 +60,8 @@ const routes: Routes = [
     ClientesComponent,
     FormComponent,
     PaginatorComponent,
-    DetalleComponent
+    DetalleComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
