@@ -21,6 +21,14 @@ export class ClienteService {
     private router: Router
   ) { }
 
+  private isNotAuthorizado(e:any): boolean {
+    if (e.status == 401 || e.status == 403) {
+      this.router.navigate(['/login']);
+      return true;
+    }
+    return false;
+  }
+
   getClientes(page:number) : Observable<any> {
      //return of(CLIENTES);
      return this.http.get(this.urlEndPointGet + '/page/' + page).pipe(
@@ -51,6 +59,10 @@ export class ClienteService {
       map( (response: any) => response.cliente as Cliente),
       catchError(e => {
         
+        if (this.isNotAuthorizado(e)) {
+          return throwError(e);
+        }
+
         if (e.status == 400) {
           return throwError(e);
         } 
@@ -65,6 +77,11 @@ export class ClienteService {
   getCliente(id:any): Observable<Cliente>{
     return this.http.get<Cliente>(`${this.urlEndPointTransaction}/${id}`).pipe(
       catchError(e => {
+
+        if (this.isNotAuthorizado(e)) {
+          return throwError(e);
+        }
+
         this.router.navigate(['/clientes']);
         console.error(e.error.mensaje);
         /**
@@ -84,6 +101,10 @@ export class ClienteService {
     return this.http.put<Cliente>(`${this.urlEndPointTransaction}/${cliente.id}`, cliente, {headers: this.httpHeaders}).pipe(
       map((response:any) => response.cliente as Cliente),
         catchError(e => {
+
+          if (this.isNotAuthorizado(e)) {
+            return throwError(e);
+          }
           
           if (e.status == 400) {
             return throwError(e);
@@ -101,6 +122,11 @@ export class ClienteService {
   delete(id: number): Observable<Cliente>{
     return this.http.delete<Cliente>(`${this.urlEndPointTransaction}/${id}`, {headers: this.httpHeaders}).pipe(
       catchError(e => {
+
+        if (this.isNotAuthorizado(e)) {
+          return throwError(e);
+        }
+
         Swal.fire(
           e.error.mensaje, e.error.error, 'error'
         )
@@ -132,10 +158,29 @@ export class ClienteService {
       reportProgress: true
     });
 
-    return this.http.request(req);
+    /**
+     *  Este apartado generaba error porque lo que se retornaba, no se
+     * estaba garantizandoque seria del tipo HttpEvent<{}> el cual indica
+     * la funcion.
+     */
+    return this.http.request<HttpEvent<{}>>(req)
+    .pipe(
+      catchError(e => {
+        this.isNotAuthorizado(e);
+        return throwError(e);
+      })
+    );
   }
 
+  /**
+   * Manejo de error
+   */
   getRegiones(): Observable<Region[]> {
-    return this.http.get<Region[]>(this.urlEndPointGet + '/regiones')
+    return this.http.get<Region[]>(this.urlEndPointGet + '/regiones').pipe(
+      catchError(e => {
+        this.isNotAuthorizado(e);
+        return throwError(e);
+      }) 
+    )
   }
 }
