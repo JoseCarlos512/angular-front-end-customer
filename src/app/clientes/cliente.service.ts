@@ -6,6 +6,7 @@ import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from '@angular/common
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { Region } from './region';
+import { AuthService } from '../usuarios/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +19,19 @@ export class ClienteService {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) { }
+
+  private agregarAuthorizationHeader() {
+    let token = this.authService.getToken();
+    
+    if (token != null) {
+      return this.httpHeaders.append('Authorization', 'Bearer ' + token)
+    }
+
+    return this.httpHeaders;
+  }
 
   private isNotAuthorizado(e:any): boolean {
     if (e.status == 401 || e.status == 403) {
@@ -55,7 +67,7 @@ export class ClienteService {
   }
 
   create(cliente: Cliente) : Observable<Cliente> {
-    return this.http.post<Cliente>(this.urlEndPointTransaction, cliente, {headers: this.httpHeaders}).pipe(
+    return this.http.post<Cliente>(this.urlEndPointTransaction, cliente, {headers: this.agregarAuthorizationHeader()}).pipe(
       map( (response: any) => response.cliente as Cliente),
       catchError(e => {
         
@@ -75,7 +87,7 @@ export class ClienteService {
   }
 
   getCliente(id:any): Observable<Cliente>{
-    return this.http.get<Cliente>(`${this.urlEndPointTransaction}/${id}`).pipe(
+    return this.http.get<Cliente>(`${this.urlEndPointTransaction}/${id}`, {headers: this.agregarAuthorizationHeader()}).pipe(
       catchError(e => {
 
         if (this.isNotAuthorizado(e)) {
@@ -98,7 +110,7 @@ export class ClienteService {
   }
 
   update(cliente: Cliente): Observable<Cliente>{
-    return this.http.put<Cliente>(`${this.urlEndPointTransaction}/${cliente.id}`, cliente, {headers: this.httpHeaders}).pipe(
+    return this.http.put<Cliente>(`${this.urlEndPointTransaction}/${cliente.id}`, cliente, {headers: this.agregarAuthorizationHeader()}).pipe(
       map((response:any) => response.cliente as Cliente),
         catchError(e => {
 
@@ -120,7 +132,7 @@ export class ClienteService {
   }
 
   delete(id: number): Observable<Cliente>{
-    return this.http.delete<Cliente>(`${this.urlEndPointTransaction}/${id}`, {headers: this.httpHeaders}).pipe(
+    return this.http.delete<Cliente>(`${this.urlEndPointTransaction}/${id}`, {headers: this.agregarAuthorizationHeader()}).pipe(
       catchError(e => {
 
         if (this.isNotAuthorizado(e)) {
@@ -150,12 +162,25 @@ export class ClienteService {
    */
 
   subirFoto(archivo: File, id:any): Observable<HttpEvent<{}>> {
+
     let formData = new FormData();
     formData.append("archivo", archivo);
     formData.append("id", id);
 
+    /**
+     * Debido a que estoy enviando un FormData tengo que instancia nuevamente 
+     * el token y enviarlo en la cabecera, y no puedo usar el metodo creado  agregarAuthorizationHeader
+     */
+    let httpHeaders = new HttpHeaders();
+    let obtenerTokenNuevamente = this.authService.getToken();
+    
+    if (obtenerTokenNuevamente != null) {
+      httpHeaders = httpHeaders.append('Authorization', 'Bearer ' + obtenerTokenNuevamente);
+    }
+
     const req = new HttpRequest('POST', `${this.urlEndPointTransaction}/upload/`, formData, {
-      reportProgress: true
+      reportProgress: true,
+      headers: httpHeaders
     });
 
     /**
@@ -176,7 +201,7 @@ export class ClienteService {
    * Manejo de error
    */
   getRegiones(): Observable<Region[]> {
-    return this.http.get<Region[]>(this.urlEndPointGet + '/regiones').pipe(
+    return this.http.get<Region[]>(this.urlEndPointGet + '/regiones', {headers: this.agregarAuthorizationHeader()}).pipe(
       catchError(e => {
         this.isNotAuthorizado(e);
         return throwError(e);
