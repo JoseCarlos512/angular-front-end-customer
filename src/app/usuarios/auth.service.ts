@@ -9,7 +9,7 @@ import { Usuario } from './usuario';
 })
 export class AuthService {
 
-  private usuario!: Usuario;
+  private usuario!: Usuario | null;
   private token!: string | null;
   /** 
    * Agregarlo como parametro de entrada del constructor 
@@ -69,9 +69,17 @@ export class AuthService {
         params.set('grant_type', 'password');
         params.set('username', usuario.username);
         params.set('password', usuario.password);
-    
+                                        
         console.log(params.toString());
     return this.http.post<any>(urlEndpoint, params.toString(), {headers: httpHeaders});
+  }
+
+  logout(): void {
+    this.token = null;
+    this.usuario = null;
+    sessionStorage.clear();
+    sessionStorage.removeItem('usuario')
+    sessionStorage.removeItem('token')
   }
 
   guardarUsuario(accessToken: string): void {
@@ -100,10 +108,21 @@ export class AuthService {
     sessionStorage.setItem('token', this.token);
   }
 
-  obtenerDatosToken(accessToken: string): any {
+  obtenerDatosToken(accessToken: string | null): any {
     if (accessToken != null){
       return JSON.parse(atob(accessToken.split(".")[1]))
     }
     return null;
+  }
+
+  isAuthenticated(): boolean{
+    
+    let mObjPayload = this.obtenerDatosToken(this.getToken());
+    if (mObjPayload != null ) {
+      if (mObjPayload.user_name && mObjPayload.user_name.length > 0) {
+        return true;
+      }
+    }
+    return false;
   }
 }

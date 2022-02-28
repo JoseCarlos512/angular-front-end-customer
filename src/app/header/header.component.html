@@ -37,10 +37,22 @@
         </ul>
         
         <ul class="navbar-nav navbar-right">
-          <li>
+          <li *ngIf="!isAutenticated">
             <a class="btn btn-outline-primary" [routerLink]="['/login']">
               Sign in
             </a>
+          </li>
+
+          <li *ngIf="isAutenticated" class="nav-item dropdown">
+            <a class="btn btn-outline-primary dropdown-toggle" href="#"  role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {{authService.getUsuario().username}}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li><button class="dropdown-item" type="button">Action</button></li>
+              <li><button class="dropdown-item" type="button">Another action</button></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><button (click)="cerrarSession()"class="dropdown-item" type="button">Sign Out</button></li>
+            </ul>
           </li>
         </ul>
       </div>
