@@ -1,6 +1,7 @@
 import { HttpEventType } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { AuthService } from 'src/app/usuarios/auth.service';
 import Swal from 'sweetalert2';
 import { Cliente } from '../cliente';
 import { ClienteService } from '../cliente.service';
@@ -22,7 +23,8 @@ export class DetalleComponent implements OnInit {
   constructor(
     private clienteService:ClienteService,
     private activatedRoute:ActivatedRoute,
-    public modalService: ModalService
+    public modalService: ModalService,
+    private authService: AuthService
   ) {
    }
 
@@ -77,6 +79,10 @@ export class DetalleComponent implements OnInit {
     this.modalService.cerrarModal();
     this.fotoSeleccionada = null;
     this.progreso = 0;
+  }
+
+  hasRole(role: string):boolean {
+    return this.authService.hasRole(role);
   }
 
 }
