@@ -24,8 +24,9 @@ export class HeaderComponent implements OnInit{
     }
 
     cerrarSession() {
+        let username = this.authService.getUsuario().username;
         this.authService.logout();
-        Swal.fire('Logout', 'Ha cerrado la session del usuario correctamente!', 'success');
+        Swal.fire('Logout', username +': Ha cerrado la session del usuario correctamente!', 'success');
         this.router.navigate(['/login'])
     }
 }
