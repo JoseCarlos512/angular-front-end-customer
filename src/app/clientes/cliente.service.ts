@@ -15,7 +15,7 @@ export class ClienteService {
 
   private urlEndPointGet: string = 'http://localhost:8080/api/clientes';
   private urlEndPointTransaction: string = 'http://localhost:8080/api/cliente';
-  private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'})
+  //private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'})
 
   constructor(
     private http: HttpClient,
@@ -23,6 +23,7 @@ export class ClienteService {
     private authService: AuthService
   ) { }
 
+  /*
   private agregarAuthorizationHeader() {
     let token = this.authService.getToken();
     
@@ -32,6 +33,7 @@ export class ClienteService {
 
     return this.httpHeaders;
   }
+  */
 
   private isNotAuthorizado(e:any): boolean {
     if (e.status == 401) {
@@ -77,7 +79,8 @@ export class ClienteService {
   }
 
   create(cliente: Cliente) : Observable<Cliente> {
-    return this.http.post<Cliente>(this.urlEndPointTransaction, cliente, {headers: this.agregarAuthorizationHeader()}).pipe(
+    //return this.http.post<Cliente>(this.urlEndPointTransaction, cliente, {headers: this.agregarAuthorizationHeader()}).pipe(
+    return this.http.post<Cliente>(this.urlEndPointTransaction, cliente).pipe(
       map( (response: any) => response.cliente as Cliente),
       catchError(e => {
         
@@ -97,7 +100,8 @@ export class ClienteService {
   }
 
   getCliente(id:any): Observable<Cliente>{
-    return this.http.get<Cliente>(`${this.urlEndPointTransaction}/${id}`, {headers: this.agregarAuthorizationHeader()}).pipe(
+    //return this.http.get<Cliente>(`${this.urlEndPointTransaction}/${id}`, {headers: this.agregarAuthorizationHeader()}).pipe(
+    return this.http.get<Cliente>(`${this.urlEndPointTransaction}/${id}`).pipe(
       catchError(e => {
 
         if (this.isNotAuthorizado(e)) {
@@ -120,7 +124,8 @@ export class ClienteService {
   }
 
   update(cliente: Cliente): Observable<Cliente>{
-    return this.http.put<Cliente>(`${this.urlEndPointTransaction}/${cliente.id}`, cliente, {headers: this.agregarAuthorizationHeader()}).pipe(
+    //return this.http.put<Cliente>(`${this.urlEndPointTransaction}/${cliente.id}`, cliente, {headers: this.agregarAuthorizationHeader()}).pipe(
+    return this.http.put<Cliente>(`${this.urlEndPointTransaction}/${cliente.id}`, cliente).pipe(
       map((response:any) => response.cliente as Cliente),
         catchError(e => {
 
@@ -142,7 +147,8 @@ export class ClienteService {
   }
 
   delete(id: number): Observable<Cliente>{
-    return this.http.delete<Cliente>(`${this.urlEndPointTransaction}/${id}`, {headers: this.agregarAuthorizationHeader()}).pipe(
+    //return this.http.delete<Cliente>(`${this.urlEndPointTransaction}/${id}`, {headers: this.agregarAuthorizationHeader()}).pipe(
+    return this.http.delete<Cliente>(`${this.urlEndPointTransaction}/${id}`).pipe(
       catchError(e => {
 
         if (this.isNotAuthorizado(e)) {
@@ -181,16 +187,20 @@ export class ClienteService {
      * Debido a que estoy enviando un FormData tengo que instancia nuevamente 
      * el token y enviarlo en la cabecera, y no puedo usar el metodo creado  agregarAuthorizationHeader
      */
+    /* ************************************************************************************* */
+    /*  Quedo deprecated: porque se agrego un interceptor que agrega httpHeaders con el token
     let httpHeaders = new HttpHeaders();
     let obtenerTokenNuevamente = this.authService.getToken();
     
     if (obtenerTokenNuevamente != null) {
       httpHeaders = httpHeaders.append('Authorization', 'Bearer ' + obtenerTokenNuevamente);
     }
+    */
+    /* ************************************************************************************* */
 
     const req = new HttpRequest('POST', `${this.urlEndPointTransaction}/upload/`, formData, {
-      reportProgress: true,
-      headers: httpHeaders
+      reportProgress: true
+      //headers: httpHeaders
     });
 
     /**
@@ -211,7 +221,8 @@ export class ClienteService {
    * Manejo de error
    */
   getRegiones(): Observable<Region[]> {
-    return this.http.get<Region[]>(this.urlEndPointGet + '/regiones', {headers: this.agregarAuthorizationHeader()}).pipe(
+    //return this.http.get<Region[]>(this.urlEndPointGet + '/regiones', {headers: this.agregarAuthorizationHeader()}).pipe(
+    return this.http.get<Region[]>(this.urlEndPointGet + '/regiones').pipe(
       catchError(e => {
         this.isNotAuthorizado(e);
         return throwError(e);
