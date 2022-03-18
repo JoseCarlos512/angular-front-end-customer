@@ -21,10 +21,25 @@ export class AuthGuard implements CanActivate {
       console.log("Holaaa!!!")
 
       if (this.authService.isAuthenticated()) {
+        if (this.isTokenExpirado()) {
+            this.router.navigate(['/login']);
+            return false;
+        }
         return true;
       }
       this.router.navigate(['/login']);
       return false;
+  }
+
+  isTokenExpirado():boolean {
+    let token = this.authService.getToken();
+    let payload = this.authService.obtenerDatosToken(token);
+    let now = new Date().getTime() / 1000;
+
+    if (payload.exp < now) {
+      return true;
+    }
+    return false;
   }
   
 }
