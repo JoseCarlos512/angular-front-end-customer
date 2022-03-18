@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Cliente } from './cliente';
-import { CLIENTES } from './clientes.json';
+//import { CLIENTES } from './clientes.json';
 import { map, Observable, catchError, of, throwError } from 'rxjs';
 import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from '@angular/common/http';
-import Swal from 'sweetalert2';
+// import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { Region } from './region';
 import { AuthService } from '../usuarios/auth.service';
@@ -35,6 +35,7 @@ export class ClienteService {
   }
   */
 
+  /* DEPRECATED!!!! Se cambio por el authInterceptor
   private isNotAuthorizado(e:any): boolean {
     if (e.status == 401) {
 
@@ -52,6 +53,7 @@ export class ClienteService {
     }
     return false;
   }
+  */
 
   getClientes(page:number) : Observable<any> {
      //return of(CLIENTES);
@@ -84,16 +86,18 @@ export class ClienteService {
       map( (response: any) => response.cliente as Cliente),
       catchError(e => {
         
-        if (this.isNotAuthorizado(e)) {
-          return throwError(e);
-        }
+        //if (this.isNotAuthorizado(e)) {
+        //  return throwError(e);
+        //}
 
         if (e.status == 400) {
           return throwError(e);
         } 
 
-        console.log(e)
-        Swal.fire(e.error.mensaje, e.error.error, 'error');
+        if (e.error.mensaje) {
+          console.error(e.error.mensaje)
+        }
+        //Swal.fire(e.error.mensaje, e.error.error, 'error');
         return throwError(e);
       })
     )
@@ -104,19 +108,22 @@ export class ClienteService {
     return this.http.get<Cliente>(`${this.urlEndPointTransaction}/${id}`).pipe(
       catchError(e => {
 
-        if (this.isNotAuthorizado(e)) {
-          return throwError(e);
+        //if (this.isNotAuthorizado(e)) {
+        //  return throwError(e);
+        //}
+
+        if (e.status != 401 && e.error.mensaje) {
+          this.router.navigate(['/clientes']);
+          console.error(e.error.mensaje)
         }
 
-        this.router.navigate(['/clientes']);
-        console.error(e.error.mensaje);
         /**
          * "Error al editar", e.error.mensaje, 'error'
          */
 
-        Swal.fire(
-          e.error.mensaje, e.error.error, 'error'
-        )
+        //Swal.fire(
+        //  e.error.mensaje, e.error.error, 'error'
+        //)
 
         return throwError(e);
       })
@@ -129,17 +136,21 @@ export class ClienteService {
       map((response:any) => response.cliente as Cliente),
         catchError(e => {
 
-          if (this.isNotAuthorizado(e)) {
-            return throwError(e);
-          }
+          //if (this.isNotAuthorizado(e)) {
+          //  return throwError(e);
+          //}
           
           if (e.status == 400) {
             return throwError(e);
           } 
 
-          Swal.fire(
-            e.error.mensaje, e.error.error, 'error'
-          )
+          if (e.error.mensaje) {
+            console.error(e.error.mensaje)
+          }
+
+          //Swal.fire(
+          //  e.error.mensaje, e.error.error, 'error'
+          //)
 
           return throwError(e);
         })
@@ -151,13 +162,17 @@ export class ClienteService {
     return this.http.delete<Cliente>(`${this.urlEndPointTransaction}/${id}`).pipe(
       catchError(e => {
 
-        if (this.isNotAuthorizado(e)) {
-          return throwError(e);
+        //if (this.isNotAuthorizado(e)) {
+        //  return throwError(e);
+        //}
+        
+        if (e.error.mensaje) {
+          console.error(e.error.mensaje)
         }
-
-        Swal.fire(
-          e.error.mensaje, e.error.error, 'error'
-        )
+        
+        //Swal.fire(
+        //  e.error.mensaje, e.error.error, 'error'
+        //)
         return throwError(e);
       })
     )
@@ -211,7 +226,7 @@ export class ClienteService {
     return this.http.request<HttpEvent<{}>>(req)
     .pipe(
       catchError(e => {
-        this.isNotAuthorizado(e);
+        //this.isNotAuthorizado(e);
         return throwError(e);
       })
     );
@@ -224,7 +239,7 @@ export class ClienteService {
     //return this.http.get<Region[]>(this.urlEndPointGet + '/regiones', {headers: this.agregarAuthorizationHeader()}).pipe(
     return this.http.get<Region[]>(this.urlEndPointGet + '/regiones').pipe(
       catchError(e => {
-        this.isNotAuthorizado(e);
+        //this.isNotAuthorizado(e);
         return throwError(e);
       }) 
     )

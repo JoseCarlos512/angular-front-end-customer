@@ -21,6 +21,7 @@ import { LoginComponent } from './usuarios/login.component';
 import { AuthGuard } from './usuarios/guards/auth.guard';
 import { RoleGuard } from './usuarios/guards/role.guard';
 import { TokenInterceptor } from './usuarios/interceptors/token.interceptor';
+import { AuthInterceptor } from './usuarios/interceptors/auth.interceptor';
 
 /**
  *  RoleGuard contiene la logica y mas de AuthGuard
@@ -82,7 +83,8 @@ const routes: Routes = [
     MatMomentDateModule
   ],
   providers: [ClienteService, 
-    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },],
+    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
