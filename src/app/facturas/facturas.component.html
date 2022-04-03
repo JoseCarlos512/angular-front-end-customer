@@ -48,13 +48,21 @@
                 </div>
             </div>
 
-            <table class="table table-striped table-hover table-sm">
+            <div class="alert alert-info my-4" *ngIf="factura.items.length == 0">
+                No hay lineas asignadas para la factura. Debe agregar almenos una 
+            </div>
+
+            <table 
+                class="table table-striped table-hover table-sm"
+                *ngIf="factura.items.length > 0"
+            >
                 <thead>
                     <tr>
                         <th>Producto</th>
                         <th>Precio</th>
                         <th>Cantidad</th>
                         <th>Total</th>
+                        <th>Eliminar</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -65,9 +73,16 @@
                             <input type="number" value="{{item.cantidad}}" class="form-control col-sm-4" (change)="actualizarCantidad(item.producto.id, $event)">
                         </td>
                         <td>{{item.calcularImporte()}}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" type="button" (click)="eliminarItemFactura(item.producto.id)">x</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
+
+            <h4 style="float:right" *ngIf="factura.items.length > 0">
+                <span><b>Gran Total:</b></span> <span><b>{{factura.calcularGranTotal()}}</b></span>
+            </h4>
 
             <div class="form-group row mt-4">
                 <div>
