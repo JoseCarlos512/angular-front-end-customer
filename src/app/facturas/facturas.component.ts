@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { flatMap, map, Observable, startWith } from 'rxjs';
+import Swal from 'sweetalert2';
 import { ClienteService } from '../clientes/cliente.service';
 import { Factura } from './models/factura';
 import { ItemFactura } from './models/item-factura';
@@ -25,7 +26,8 @@ export class FacturasComponent implements OnInit {
   constructor(
     private clienteService: ClienteService,
     private activatedRoute: ActivatedRoute,
-    private facturasService: FacturasService
+    private facturasService: FacturasService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -111,5 +113,10 @@ export class FacturasComponent implements OnInit {
     this.factura.items = this.factura.items.filter((item:ItemFactura) => id !== item.producto.id)
   }
 
-
+  create():void {
+    this.facturasService.create(this.factura).subscribe(factura => {
+      Swal.fire(this.titulo, `Factura ${factura.descripcion} creada con exito`, 'success');
+      this.router.navigate(['/clientes']);
+    })
+  }
 }
