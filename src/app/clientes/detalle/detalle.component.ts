@@ -1,6 +1,8 @@
 import { HttpEventType } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Factura } from 'src/app/facturas/models/factura';
+import { FacturasService } from 'src/app/facturas/services/facturas.service';
 import { AuthService } from 'src/app/usuarios/auth.service';
 import Swal from 'sweetalert2';
 import { Cliente } from '../cliente';
@@ -24,7 +26,8 @@ export class DetalleComponent implements OnInit {
     private clienteService:ClienteService,
     private activatedRoute:ActivatedRoute,
     public modalService: ModalService,
-    private authService: AuthService
+    private authService: AuthService,
+    private facturasService: FacturasService
   ) {
    }
 
@@ -83,6 +86,52 @@ export class DetalleComponent implements OnInit {
 
   hasRole(role: string):boolean {
     return this.authService.hasRole(role);
+  }
+
+  delete(factura: Factura) {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger'
+      },
+      buttonsStyling: false
+    })
+    
+      swalWithBootstrapButtons.fire({
+        title: '¿Estas seguro?',
+        text: `¿Seguro que deseas eliminar la factura ${factura.descripcion}?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si, eliminar',
+        cancelButtonText: 'No, cancelar',
+        reverseButtons: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+
+        
+        this.facturasService.deleteFactura(factura.id)
+          .subscribe(response => {     
+            
+            // Eliminar factura de la cache (artificial)
+            this.cliente.facturas = this.cliente.facturas.filter(fa => fa !== factura);
+
+            swalWithBootstrapButtons.fire(
+              'Factura eliminada!',
+              `Factura ${factura.descripcion} eliminada con exito.`,
+              'success'
+            )
+        });  
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire(
+          'Cancelado',
+          'Transaccion cancelada',
+          'error'
+        )
+      }
+    })
   }
 
 }
