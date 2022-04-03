@@ -44,6 +44,34 @@
                   </div>
                 </div>
             </div>
+
+            <div class="alert alert-info my-4" *ngIf="cliente.facturas.length <= 0 else elseTableFactura">
+              No hay facturas asignadas para el cliente {{cliente.nombre}}
+            </div>
+            <ng-template #elseTableFactura>
+              <div class="row">
+                <table class="table table-bordered table-striped my-4">
+                  <thead>
+                    <th>Folio</th>
+                    <th>Descripcion</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>Detalle</th>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let factura of cliente.facturas"> 
+                      <td>{{factura.id}}</td>
+                      <td>{{factura.descripcion}}</td>
+                      <td>{{factura.createAt}}</td>
+                      <td>{{factura.total}}</td>
+                      <td>
+                        <button class="btn btn-primary btn-sm" type="button" [routerLink]="['/facturas', factura.id]">ver</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </ng-template>
           </div>
         </div>
         <div class="modal-footer">

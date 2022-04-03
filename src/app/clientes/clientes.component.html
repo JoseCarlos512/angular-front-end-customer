@@ -14,7 +14,8 @@
         </button>
       </div>
 
-      <table class="table table-bordered table-striped" *ngIf="clientes.length>0 else elseBlockMessage">
+      <!-- *ngIf="clientes.length>0 else elseBlockMessage" -->
+      <table class="table table-bordered table-striped">
           <thead>
             <tr>
                 <th *ngIf="hasRole('ROLE_USER')">Perfil</th>
@@ -28,7 +29,8 @@
           </thead>
           <tbody>
             <tr *ngFor="let cliente of clientes">
-                <td *ngIf="hasRole('ROLE_USER')">
+                <!-- *ngIf="hasRole('ROLE_USER')" -->
+                <td>
                   <img 
                     *ngIf="cliente?.foto" 
                     (click)="abrirModal(cliente)" 
@@ -60,10 +62,10 @@
       
       <paginator-nav *ngIf="paginador" [paginador]="paginador"></paginator-nav>
 
-      <ng-template #elseBlockMessage>
+      <!-- <ng-template #elseBlockMessage>
         <div class="alert alert-info">
           No hay registros en la base de datos
         </div>
-      </ng-template>
+      </ng-template> -->
     </div>
   </div>
