@@ -66,11 +66,13 @@ const routes: Routes = [
   },
   {
     path: 'facturas/:id',
-    component: DetalleFacturaComponent
+    component: DetalleFacturaComponent,
+    canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_USER'}
   },
   {
     path: 'facturas/form/:clienteId',
-    component: FacturasComponent
+    component: FacturasComponent,
+    canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_ADMIN'}
   }
 ];
 

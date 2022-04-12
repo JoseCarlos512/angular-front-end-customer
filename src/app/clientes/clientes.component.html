@@ -14,8 +14,7 @@
         </button>
       </div>
 
-      <!-- *ngIf="clientes.length>0 else elseBlockMessage" -->
-      <table class="table table-bordered table-striped">
+      <table *ngIf="clientes.length>0 else elseBlockMessage" class="table table-bordered table-striped">
           <thead>
             <tr>
                 <th *ngIf="hasRole('ROLE_USER')">Perfil</th>
@@ -23,15 +22,14 @@
                 <th>Apellido</th>
                 <th>Email</th>
                 <th>Fecha</th>
-                <th>Crear Factura</th>
+                <th *ngIf="hasRole('ROLE_ADMIN')">Crear Factura</th>
                 <th *ngIf="hasRole('ROLE_ADMIN')">editar</th>
                 <th *ngIf="hasRole('ROLE_ADMIN')">eliminar</th>      
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let cliente of clientes">
-                <!-- *ngIf="hasRole('ROLE_USER')" -->
-                <td>
+                <td *ngIf="hasRole('ROLE_USER')">
                   <img 
                     *ngIf="cliente?.foto" 
                     (click)="abrirModal(cliente)" 
@@ -51,7 +49,7 @@
                 <td>{{ cliente.apellido }}</td>
                 <td>{{ cliente.email }}</td>
                 <td>{{ cliente.createAt }}</td>
-                <td>
+                <td *ngIf="hasRole('ROLE_ADMIN')">
                   <button type="button" name="crear" [routerLink]="['/facturas/form', cliente.id]" class="btn btn-success btn-sm">Crear Factura</button>
                 </td>
                 <td *ngIf="hasRole('ROLE_ADMIN')">
@@ -66,10 +64,10 @@
       
       <paginator-nav *ngIf="paginador" [paginador]="paginador"></paginator-nav>
 
-      <!-- <ng-template #elseBlockMessage>
+      <ng-template #elseBlockMessage>
         <div class="alert alert-info">
           No hay registros en la base de datos
         </div>
-      </ng-template> -->
+      </ng-template>
     </div>
   </div>
