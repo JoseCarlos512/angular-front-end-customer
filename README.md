@@ -41,3 +41,14 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 * Subida de archivos
 * Paginacion
 * Json Web Token
+
+
+## Guias previas para la instalacion
+* Instalar Node.js --- https://nodejs.org/en/
+ - node -v
+ - npm -v
+* Instalar TypeScript --- npm install -g typescript
+ - tsc -v
+* Instalar Angular CLI --- npm install -g @angular/cli
+ - ng version
+ 
